@@ -33,7 +33,9 @@ export default function BankAccounts({
   const [banks, setBanks] = useState<Bank[]>([]);
 
   const findBanks = useCallback(async () => {
-    const response = await axios.get("http://localhost:3333/banks");
+    const response = await axios.get(
+      "https://api-financial-control.onrender.com/banks",
+    );
     const filteredBanks = response.data.filter(
       (bank: Bank) => bank.email === data?.user?.email,
     );

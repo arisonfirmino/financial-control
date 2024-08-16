@@ -28,9 +28,11 @@ export default function Account({
   };
 
   const handleDeleteBank = async () => {
-    await axios.delete(`http://localhost:3333/bank?id=${id}`).then(() => {
-      updateBanks();
-    });
+    await axios
+      .delete(`https://api-financial-control.onrender.com/bank?id=${id}`)
+      .then(() => {
+        updateBanks();
+      });
   };
 
   return (

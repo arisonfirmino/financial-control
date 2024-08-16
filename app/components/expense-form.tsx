@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,22 +8,25 @@ import axios from "axios";
 
 const schema = yup.object({
   name: yup.string().required(),
-  initial_value: yup
-    .number()
-    .transform((value, originalValue) => {
-      return originalValue.trim() === "" ? undefined : value;
-    })
-    .nullable(),
+  bank: yup.string().required(),
+  value: yup.number().required(),
 });
 
-export default function AddNewBankForm({
+interface Bank {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export default function ExpenseForm({
   handleClick,
-  updateBanks,
+  findExpenses,
 }: {
   handleClick: () => void;
-  updateBanks: () => void;
+  findExpenses: () => void;
 }) {
   const { data: session } = useSession();
+  const [banks, setBanks] = useState<Bank[]>([]);
 
   const {
     register,
@@ -34,23 +38,42 @@ export default function AddNewBankForm({
   });
 
   const name = watch("name");
-  const initial_value = watch("initial_value");
+  const value = watch("value");
+  const bank = watch("bank");
+
+  useEffect(() => {
+    const findBanks = async () => {
+      const response = await axios.get(
+        "https://api-financial-control.onrender.com/banks",
+      );
+      const filteredBanks = response.data.filter(
+        (bank: Bank) => bank.email === session?.user?.email,
+      );
+
+      setBanks(filteredBanks);
+      console.log(filteredBanks);
+    };
+
+    findBanks();
+  }, [session?.user?.email]);
 
   const onSubmit = async (data: {
     name: string;
-    initial_value?: number | null;
+    value: number;
+    bank: string;
   }) => {
     const formData = {
       name: data.name,
       email: session?.user?.email,
-      initial_value: data.initial_value ?? 0,
+      bankId: data.bank,
+      value: data.value ?? 0,
     };
 
     await axios
-      .post("https://api-financial-control.onrender.com/bank", formData)
+      .post("https://api-financial-control.onrender.com/expense", formData)
       .then(() => {
         handleClick();
-        updateBanks();
+        findExpenses();
       });
   };
 
@@ -83,13 +106,35 @@ export default function AddNewBankForm({
       </div>
 
       <div className="flex w-full flex-col gap-1">
-        <label className="text-sm uppercase">Valor inicial</label>
+        <label className="text-sm uppercase">Banco</label>
+
+        <select
+          {...register("bank")}
+          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 capitalize outline-none ${errors.bank ? "outline-red-600" : "focus:outline-primary"} ${bank ? "outline-primary" : ""}`}
+        >
+          <option value="" className="bg-main">
+            Selecione um banco
+          </option>
+          {banks.map((bank) => (
+            <option
+              key={bank.id}
+              value={bank.id}
+              className="bg-main capitalize"
+            >
+              {bank.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex w-full flex-col gap-1">
+        <label className="text-sm uppercase">Valor</label>
 
         <input
           type="number"
           placeholder="0,00"
-          {...register("initial_value")}
-          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none focus:outline-primary ${initial_value ? "outline-primary" : ""}`}
+          {...register("value")}
+          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none focus:outline-primary ${value ? "outline-primary" : ""}`}
         />
       </div>
 

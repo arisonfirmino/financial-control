@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import BankAccounts from "./bank-accounts";
 import ExpenseButton from "./expense-button";
 import Expenses from "./expenses";
@@ -6,9 +7,9 @@ import Header from "./header";
 import IncomeButton from "./income-button";
 import Incomes from "./incomes";
 import IncomeForm from "./income-form";
-import { useSession } from "next-auth/react";
 import axios from "axios";
 import ExpenseForm from "./expense-form";
+import TotalValue from "./total-value";
 
 interface AppProps {
   showBankForm: boolean;
@@ -64,7 +65,6 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
       (bank: Bank) => bank.email === data?.user?.email,
     );
     setBanks(filteredBanks);
-    console.log(filteredBanks);
   }, [data?.user?.email]);
 
   const findIncomes = useCallback(async () => {
@@ -94,8 +94,10 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
   }, [findBanks, findIncomes, findExpenses]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-5 overflow-auto border-solid border-white border-opacity-10 p-5 xl:min-w-[600px] xl:max-w-[600px] xl:border-x [&::-webkit-scrollbar]:hidden">
+    <div className="flex w-full flex-col gap-5 border-x border-solid border-white border-opacity-10 p-5 xl:min-w-[600px] xl:max-w-[600px]">
       <Header />
+
+      <TotalValue banks={banks} />
 
       <div className="flex items-center justify-center gap-5">
         <hr className="hidden w-full border border-solid border-white border-opacity-10 md:flex" />
@@ -111,7 +113,7 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
         setShowBankForm={setShowBankForm}
       />
 
-      <div className="flex gap-5">
+      <div className="flex gap-5 overflow-auto [&::-webkit-scrollbar]:hidden">
         <Incomes incomes={incomes} />
         <Expenses expenses={expenses} />
       </div>

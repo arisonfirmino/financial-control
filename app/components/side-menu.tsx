@@ -27,7 +27,8 @@ export default function SideMenu({ setShowBankForm }: SideMenuProps) {
         <button
           key={index}
           onClick={item.handleClick}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white bg-opacity-5 active:bg-gray-400 active:text-gray-600"
+          disabled={!data?.user}
+          className={`flex h-10 w-10 items-center justify-center rounded-full bg-white bg-opacity-5 active:bg-gray-400 active:text-gray-600 ${!data?.user ? "cursor-not-allowed" : ""}`}
         >
           {item.icon}
         </button>

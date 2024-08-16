@@ -1,52 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { LandmarkIcon } from "lucide-react";
 import Account from "./account";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import axios from "axios";
 import AddNewBankForm from "./bank-form";
-
-interface Bank {
-  id: string;
-  name: string;
-  email: string;
-  initial_value: number;
-  current_value: number;
-  expenses: number;
-  incomes: number;
-  created_at: string;
-  updated_at: string;
-}
+import { Bank } from "./app";
 
 interface BankAccountsProps {
+  banks: Bank[];
+  findBanks: () => void;
   showBankForm: boolean;
   setShowBankForm: (value: boolean) => void;
 }
 
 export default function BankAccounts({
+  banks,
+  findBanks,
   showBankForm,
   setShowBankForm,
 }: BankAccountsProps) {
-  const { data } = useSession();
-
-  const [banks, setBanks] = useState<Bank[]>([]);
-
-  const findBanks = useCallback(async () => {
-    const response = await axios.get(
-      "https://api-financial-control.onrender.com/banks",
-    );
-    const filteredBanks = response.data.filter(
-      (bank: Bank) => bank.email === data?.user?.email,
-    );
-    setBanks(filteredBanks);
-    console.log(filteredBanks);
-  }, [data?.user?.email]);
-
-  useEffect(() => {
-    findBanks();
-  }, [findBanks]);
-
   return (
     <section className="flex flex-col gap-5">
       <h3 className="flex items-center gap-1.5 text-lg font-bold uppercase">

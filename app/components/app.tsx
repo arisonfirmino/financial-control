@@ -15,9 +15,16 @@ interface AppProps {
   setShowBankForm: (value: boolean) => void;
 }
 
-interface Bank {
+export interface Bank {
   id: string;
   name: string;
+  email: string;
+  initial_value: number;
+  current_value: number;
+  expenses: number;
+  incomes: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Income {
@@ -41,11 +48,24 @@ export interface Expense {
 export default function App({ showBankForm, setShowBankForm }: AppProps) {
   const { data } = useSession();
 
+  const [banks, setBanks] = useState<Bank[]>([]);
+
   const [incomes, setIncomes] = useState<Income[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
 
   const [showIncomeForm, setShowIncomeForm] = useState(false);
   const [showExpenseForm, setShowExpenseForm] = useState(false);
+
+  const findBanks = useCallback(async () => {
+    const response = await axios.get(
+      "https://api-financial-control.onrender.com/banks",
+    );
+    const filteredBanks = response.data.filter(
+      (bank: Bank) => bank.email === data?.user?.email,
+    );
+    setBanks(filteredBanks);
+    console.log(filteredBanks);
+  }, [data?.user?.email]);
 
   const findIncomes = useCallback(async () => {
     const response = await axios.get(
@@ -68,9 +88,10 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
   }, [data?.user?.email]);
 
   useEffect(() => {
+    findBanks();
     findIncomes();
     findExpenses();
-  }, [findIncomes, findExpenses]);
+  }, [findBanks, findIncomes, findExpenses]);
 
   return (
     <div className="flex h-full w-full flex-col gap-5 overflow-auto border-solid border-white border-opacity-10 p-5 xl:min-w-[600px] xl:max-w-[600px] xl:border-x [&::-webkit-scrollbar]:hidden">
@@ -84,6 +105,8 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
       </div>
 
       <BankAccounts
+        banks={banks}
+        findBanks={findBanks}
         showBankForm={showBankForm}
         setShowBankForm={setShowBankForm}
       />
@@ -97,6 +120,7 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
         <IncomeForm
           handleClick={() => setShowIncomeForm(false)}
           findIncomes={findIncomes}
+          updateBanks={findBanks}
         />
       )}
 
@@ -104,6 +128,7 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
         <ExpenseForm
           handleClick={() => setShowExpenseForm(false)}
           findExpenses={findExpenses}
+          updateBanks={findBanks}
         />
       )}
     </div>

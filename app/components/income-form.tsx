@@ -21,9 +21,11 @@ interface Bank {
 export default function IncomeForm({
   handleClick,
   findIncomes,
+  updateBanks,
 }: {
   handleClick: () => void;
   findIncomes: () => void;
+  updateBanks: () => void;
 }) {
   const { data: session } = useSession();
   const [banks, setBanks] = useState<Bank[]>([]);
@@ -74,6 +76,7 @@ export default function IncomeForm({
       .then(() => {
         handleClick();
         findIncomes();
+        updateBanks();
       });
   };
 

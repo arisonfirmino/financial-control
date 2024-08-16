@@ -21,9 +21,11 @@ interface Bank {
 export default function ExpenseForm({
   handleClick,
   findExpenses,
+  updateBanks,
 }: {
   handleClick: () => void;
   findExpenses: () => void;
+  updateBanks: () => void;
 }) {
   const { data: session } = useSession();
   const [banks, setBanks] = useState<Bank[]>([]);
@@ -74,6 +76,7 @@ export default function ExpenseForm({
       .then(() => {
         handleClick();
         findExpenses();
+        updateBanks();
       });
   };
 

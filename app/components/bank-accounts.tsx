@@ -1,4 +1,4 @@
-import { LandmarkIcon } from "lucide-react";
+import { LandmarkIcon, PlusIcon } from "lucide-react";
 import Account from "./account";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -20,10 +20,19 @@ export default function BankAccounts({
 }: BankAccountsProps) {
   return (
     <section className="flex flex-col gap-5">
-      <h3 className="flex items-center gap-1.5 text-lg font-bold uppercase">
-        <LandmarkIcon size={18} />
-        Contas
-      </h3>
+      <div className="flex items-center justify-between">
+        <h3 className="flex items-center gap-1.5 text-lg font-bold uppercase">
+          <LandmarkIcon size={18} />
+          Contas
+        </h3>
+
+        <button
+          onClick={() => setShowBankForm(true)}
+          className="text-primary active:text-gray-400 xl:hidden"
+        >
+          <PlusIcon size={18} />
+        </button>
+      </div>
 
       <Swiper
         spaceBetween={10}

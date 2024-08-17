@@ -28,13 +28,16 @@ export default function IncomeForm({
   updateBanks: () => void;
 }) {
   const { data: session } = useSession();
+
   const [banks, setBanks] = useState<Bank[]>([]);
+  const [formattedValue, setFormattedValue] = useState<string>("0,00");
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    setValue,
+    formState: { errors, touchedFields },
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -53,11 +56,21 @@ export default function IncomeForm({
       );
 
       setBanks(filteredBanks);
-      console.log(filteredBanks);
     };
 
     findBanks();
   }, [session?.user?.email]);
+
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value.replace(/\D/g, "");
+    const num = parseFloat(input) / 100;
+    const formatted = num.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setFormattedValue(formatted);
+    setValue("value", num);
+  };
 
   const onSubmit = async (data: {
     name: string;
@@ -104,7 +117,7 @@ export default function IncomeForm({
           type="text"
           placeholder="Insira o nome do banco"
           {...register("name")}
-          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none ${errors.name ? "outline-red-600" : "focus:outline-primary"} ${name ? "outline-primary" : ""}`}
+          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none ${errors.name || (name === "" && touchedFields.name) ? "outline-red-600" : "focus:outline-primary"} ${name ? "outline-primary" : ""}`}
         />
       </div>
 
@@ -113,7 +126,7 @@ export default function IncomeForm({
 
         <select
           {...register("bank")}
-          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 capitalize outline-none ${errors.bank ? "outline-red-600" : "focus:outline-primary"} ${bank ? "outline-primary" : ""}`}
+          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 capitalize outline-none ${errors.bank || (bank === "" && touchedFields.bank) ? "outline-red-600" : "focus:outline-primary"} ${bank ? "outline-primary" : ""}`}
         >
           <option value="" className="bg-main">
             Selecione um banco
@@ -134,10 +147,11 @@ export default function IncomeForm({
         <label className="text-sm uppercase">Valor</label>
 
         <input
-          type="number"
+          type="text"
           placeholder="0,00"
-          {...register("value")}
-          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none focus:outline-primary ${value ? "outline-primary" : ""}`}
+          value={formattedValue}
+          onChange={handleValueChange}
+          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none focus:outline-primary ${errors.value || (value === undefined && touchedFields.value) ? "outline-red-600" : ""}`}
         />
       </div>
 

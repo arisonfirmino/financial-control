@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,12 +8,7 @@ import axios from "axios";
 
 const schema = yup.object({
   name: yup.string().required(),
-  initial_value: yup
-    .number()
-    .transform((value, originalValue) => {
-      return originalValue.trim() === "" ? undefined : value;
-    })
-    .nullable(),
+  initial_value: yup.number(),
 });
 
 export default function AddNewBankForm({
@@ -24,17 +20,30 @@ export default function AddNewBankForm({
 }) {
   const { data: session } = useSession();
 
+  const [formattedValue, setFormattedValue] = useState<string>("0,00");
+
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const name = watch("name");
-  const initial_value = watch("initial_value");
+
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value.replace(/\D/g, "");
+    const num = parseFloat(input) / 100;
+    const formatted = num.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setFormattedValue(formatted);
+    setValue("initial_value", num);
+  };
 
   const onSubmit = async (data: {
     name: string;
@@ -86,10 +95,11 @@ export default function AddNewBankForm({
         <label className="text-sm uppercase">Valor inicial</label>
 
         <input
-          type="number"
+          type="text"
           placeholder="0,00"
-          {...register("initial_value")}
-          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none focus:outline-primary ${initial_value ? "outline-primary" : ""}`}
+          value={formattedValue}
+          onChange={handleValueChange}
+          className={`rounded bg-white bg-opacity-5 px-2.5 py-1.5 outline-none focus:outline-primary ${errors.initial_value ? "outline-red-600" : ""}`}
         />
       </div>
 

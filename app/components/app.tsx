@@ -94,7 +94,7 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
   }, [findBanks, findIncomes, findExpenses]);
 
   return (
-    <div className="flex w-full flex-col gap-5 border-x border-solid border-white border-opacity-10 p-5 xl:min-w-[600px] xl:max-w-[600px]">
+    <div className="flex w-full flex-col gap-5 overflow-auto border-x border-solid border-white border-opacity-10 p-5 xl:min-w-[600px] xl:max-w-[600px] [&::-webkit-scrollbar]:hidden">
       <Header />
 
       <TotalValue banks={banks} />
@@ -113,7 +113,7 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
         setShowBankForm={setShowBankForm}
       />
 
-      <div className="flex gap-5 overflow-auto [&::-webkit-scrollbar]:hidden">
+      <div className="flex gap-5">
         <Incomes incomes={incomes} />
         <Expenses expenses={expenses} />
       </div>

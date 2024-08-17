@@ -113,7 +113,7 @@ export default function App({ showBankForm, setShowBankForm }: AppProps) {
         setShowBankForm={setShowBankForm}
       />
 
-      <div className="flex gap-5">
+      <div className="flex gap-5 overflow-x-auto [&::-webkit-scrollbar]:hidden">
         <Incomes incomes={incomes} />
         <Expenses expenses={expenses} />
       </div>

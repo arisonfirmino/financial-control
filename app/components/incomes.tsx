@@ -1,7 +1,17 @@
 import { Income } from "./app";
 import Card from "./card";
 
-export default function Incomes({ incomes }: { incomes: Income[] }) {
+interface IncomesProps {
+  incomes: Income[];
+  updateBanks: () => void;
+  updateCards: () => void;
+}
+
+export default function Incomes({
+  incomes,
+  updateBanks,
+  updateCards,
+}: IncomesProps) {
   return (
     <section className="flex h-fit min-w-full flex-col gap-5 rounded bg-white bg-opacity-5 p-2.5 md:w-full md:min-w-0">
       <h3 className="flex items-center gap-2.5 text-lg font-medium uppercase">
@@ -18,6 +28,9 @@ export default function Incomes({ incomes }: { incomes: Income[] }) {
             value={income.value}
             created_at={income.created_at}
             bank={income.bank.name}
+            type="income"
+            updateBanks={updateBanks}
+            updateCards={updateCards}
           />
         ))}
       </div>

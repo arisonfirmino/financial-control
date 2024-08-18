@@ -27,6 +27,13 @@ export default function Account({
     }).format(value);
   };
 
+  const accounts_items = [
+    { title: "Valor inicial", value: formatToBRL(initial_value) },
+    { title: "Gastos", value: formatToBRL(expenses) },
+    { title: "Receitas", value: formatToBRL(incomes) },
+    { title: "Valor atual", value: formatToBRL(current_value) },
+  ];
+
   const handleDeleteBank = async () => {
     await axios
       .delete(`https://api-financial-control.onrender.com/bank?id=${id}`)
@@ -42,29 +49,15 @@ export default function Account({
         {name}
       </h3>
 
-      <div className="flex items-center gap-5 text-sm">
-        <h4 className="text-nowrap uppercase">Valor inicial</h4>
-        <hr className="w-full border border-solid border-white border-opacity-10" />
-        <p className="text-nowrap font-medium">{formatToBRL(initial_value)}</p>
-      </div>
+      {accounts_items.map((item, index) => (
+        <div key={index} className="flex items-center gap-5 text-sm">
+          <h4 className="text-nowrap uppercase">{item.title}</h4>
 
-      <div className="flex items-center gap-5 text-sm">
-        <h4 className="text-nowrap uppercase">Gastos</h4>
-        <hr className="w-full border border-solid border-white border-opacity-10" />
-        <p className="text-nowrap font-medium">{formatToBRL(expenses)}</p>
-      </div>
+          <hr className="w-full border border-solid border-white border-opacity-10" />
 
-      <div className="flex items-center gap-5 text-sm">
-        <h4 className="text-nowrap uppercase">Receitas</h4>
-        <hr className="w-full border border-solid border-white border-opacity-10" />
-        <p className="text-nowrap font-medium">{formatToBRL(incomes)}</p>
-      </div>
-
-      <div className="flex items-center gap-5 text-sm">
-        <h4 className="text-nowrap uppercase">Valor atual</h4>
-        <hr className="w-full border border-solid border-white border-opacity-10" />
-        <p className="text-nowrap font-medium">{formatToBRL(current_value)}</p>
-      </div>
+          <p className="text-nowrap font-medium">{item.value}</p>
+        </div>
+      ))}
 
       <button
         onClick={handleDeleteBank}

@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  banks         Bank[]
+  incomes       Income[]
+  expenses      Expense[]
+
+  @@map("users")
+}
+
+model Bank {
+  id            String    @id @default(uuid())
+  name          String
+  initial_value Decimal   @db.Decimal(10, 2)
+  current_value Decimal   @db.Decimal(10, 2)
+  expenses      Expense[]
+  incomes       Income[]
+  userId        String    @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now())
+
+  @@map("banks")
+}
+
+model Income {
+  id         String   @id @default(uuid())
+  name       String
+  value      Decimal  @db.Decimal(10, 2)
+  bankId     String   @map("bank_id")
+  userId     String   @map("user_id")
+  bank       Bank     @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@map("incomes")
+}
+
+model Expense {
+  id         String   @id @default(uuid())
+  name       String
+  value      Decimal  @db.Decimal(10, 2)
+  bankId     String   @map("bank_id")
+  userId     String   @map("user_id")
+  bank       Bank     @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@map("expenses")
+}

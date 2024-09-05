@@ -45,8 +45,8 @@ export default function Nav({
   ];
 
   return (
-    <nav className="fixed left-0 top-0 flex h-full flex-col justify-between border-r border-solid border-[#d4d4d4] border-opacity-10 bg-stroke p-5">
-      <div className="flex flex-col gap-5">
+    <nav className="fixed left-0 top-0 flex w-full justify-between border-b border-solid border-[#d4d4d4] border-opacity-10 bg-stroke p-5 md:h-full md:w-fit md:flex-col md:border-r">
+      <div className="flex gap-5 md:flex-col">
         {nav_items.map((item, index) => (
           <button
             key={index}

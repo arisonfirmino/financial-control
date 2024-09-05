@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Bank, Expense, Income, User } from "@prisma/client";
 import DataList from "./data-list";
 import Nav from "./nav";
-import TransactionHistory from "./transaction-history";
+import TransactionHistory from "./transaction/transaction-history";
 
 interface AppProps {
   user: User & {
@@ -29,7 +29,7 @@ export default function App({ user }: AppProps) {
         showTransactionForm={showTransactionForm}
         setShowTransactionForm={setShowTransactionForm}
       />
-      <div className="ml-20 grid grid-cols-2 gap-5 px-5 pt-5">
+      <div className="mt-20 grid grid-cols-1 gap-5 md:ml-20 md:mt-0 xl:grid-cols-2">
         <DataList
           user={user}
           showAddBank={showAddBank}

@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import Balance from "./balance";
 import BankList from "./bank/bank-list";
 import AddBank from "./bank/add-bank";
-import TransactionForm from "./transaction-form";
+import TransactionForm from "./transaction/transaction-form";
 
 interface DataListProps {
   user: Prisma.UserGetPayload<{
@@ -37,11 +37,15 @@ export default function DataList({
 
   return (
     <div className="h-fit space-y-5">
-      <h2 className="text-base">
-        Olá, <span className="font-semibold">{user.name}</span>
-      </h2>
+      <div className="px-5 pt-5 xl:pr-0">
+        <h2 className="text-base">
+          Olá, <span className="font-semibold">{user.name}</span>
+        </h2>
+      </div>
 
-      <Balance total_value={total_value} />
+      <div className="px-5 xl:pr-0">
+        <Balance total_value={total_value} />
+      </div>
 
       <BankList
         banks={user.banks}
@@ -50,7 +54,7 @@ export default function DataList({
       />
 
       {showAddBank && (
-        <div className="space-y-2.5">
+        <div className="space-y-2.5 px-5 xl:pr-0">
           <h3 className="text-base font-medium uppercase">
             Adicionar novo banco
           </h3>
@@ -60,7 +64,7 @@ export default function DataList({
       )}
 
       {showTransactionForm && (
-        <div className="space-y-2.5">
+        <div className="space-y-2.5 px-5 xl:pr-0">
           <h3 className="text-base font-medium uppercase">
             Adicionar nova transação
           </h3>

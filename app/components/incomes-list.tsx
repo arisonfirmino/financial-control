@@ -1,5 +1,5 @@
 import { Bank, Income } from "@prisma/client";
-import TransactionItem from "./transaction-item";
+import TransactionItem from "./transaction/transaction-item";
 import { deleteIncome } from "../actions/income";
 
 interface IncomesListProps {
@@ -8,7 +8,7 @@ interface IncomesListProps {
 
 export default function IncomesList({ incomes }: IncomesListProps) {
   return (
-    <div className="w-full space-y-2.5">
+    <div className="min-w-full space-y-2.5">
       <h3 className="text-base font-semibold uppercase">Central de receitas</h3>
 
       {incomes.map((income) => (

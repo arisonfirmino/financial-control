@@ -1,6 +1,6 @@
 import { Bank, Expense, Income } from "@prisma/client";
-import IncomesList from "./incomes-list";
-import ExpensesList from "./expenses-list";
+import IncomesList from "../incomes-list";
+import ExpensesList from "../expenses-list";
 
 interface TransactionHistoryProps {
   incomes: (Income & { bank: Bank })[];
@@ -12,7 +12,7 @@ export default function TransactionHistory({
   expenses,
 }: TransactionHistoryProps) {
   return (
-    <div className="flex h-fit gap-5">
+    <div className="flex h-fit grid-cols-2 gap-5 overflow-x-auto px-5 md:grid xl:pl-0 xl:pt-5 [&::-webkit-scrollbar]:hidden">
       <IncomesList incomes={incomes} />
       <ExpensesList expenses={expenses} />
     </div>

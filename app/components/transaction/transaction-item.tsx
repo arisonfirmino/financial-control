@@ -1,6 +1,7 @@
-import { LandmarkIcon, Trash2Icon } from "lucide-react";
-import { formatDate } from "../helpers/date";
-import { formatValue } from "../helpers/formatValue";
+import { useState } from "react";
+import { LandmarkIcon, LoaderCircleIcon, Trash2Icon } from "lucide-react";
+import { formatDate } from "../../helpers/date";
+import { formatValue } from "../../helpers/formatValue";
 import { Bank, Expense, Income } from "@prisma/client";
 
 interface TransactionItemProps {
@@ -12,8 +13,16 @@ export default function TransactionItem({
   transaction,
   handleDelete,
 }: TransactionItemProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleDeleteTransiction = async () => {
-    await handleDelete();
+    setIsLoading(true);
+
+    try {
+      await handleDelete();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,7 +46,11 @@ export default function TransactionItem({
         onClick={handleDeleteTransiction}
         className="absolute right-1 top-0 text-red-600"
       >
-        <Trash2Icon size={12} />
+        {isLoading ? (
+          <LoaderCircleIcon size={12} className="animate-spin" />
+        ) : (
+          <Trash2Icon size={12} />
+        )}
       </button>
     </div>
   );

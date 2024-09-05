@@ -35,7 +35,7 @@ export default function BankItem({ bank }: BankItemProps) {
   };
 
   return (
-    <div className="relative rounded border border-solid border-stroke bg-background p-1.5">
+    <div className="relative min-w-64 rounded border border-solid border-stroke bg-background p-1.5 md:min-w-fit">
       <h3 className="flex items-center gap-1 text-sm font-semibold capitalize">
         <LandmarkIcon size={14} />
         {bank.name}

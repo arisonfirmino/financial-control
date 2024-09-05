@@ -5,8 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LoaderCircleIcon } from "lucide-react";
 import { Bank } from "@prisma/client";
-import { createNewIncome } from "../actions/income";
-import { createNewExpense } from "../actions/expense";
+import { createNewIncome } from "../../actions/income";
+import { createNewExpense } from "../../actions/expense";
 
 const schema = yup.object({
   name: yup.string().required(),

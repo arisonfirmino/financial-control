@@ -18,16 +18,18 @@ export default function BankList({
 }: BankListProps) {
   return (
     <div className="space-y-2.5">
-      <h3 className="text-base font-semibold uppercase">Central de bancos</h3>
+      <h3 className="pl-5 text-base font-semibold uppercase">
+        Central de bancos
+      </h3>
 
-      <div className="grid grid-cols-2 gap-5 2xl:grid-cols-3">
+      <div className="flex grid-cols-2 gap-5 overflow-x-auto px-5 md:grid md:pl-5 xl:pr-0 2xl:grid-cols-3 [&::-webkit-scrollbar]:hidden">
         {banks.map((bank) => (
           <BankItem key={bank.id} bank={bank} />
         ))}
 
         <button
           onClick={() => setShowAddBank(!showAddBank)}
-          className={`flex items-center justify-center gap-2.5 rounded border border-solid border-[#d4d4d4] py-5 text-[#d4d4d4] duration-200 hover:bg-background ${showAddBank ? "border-opacity-100 text-opacity-100" : "border-opacity-10 text-opacity-30"}`}
+          className={`hidden items-center justify-center gap-2.5 rounded border border-solid border-[#d4d4d4] py-5 text-[#d4d4d4] duration-200 hover:bg-background md:flex ${showAddBank ? "border-opacity-100 text-opacity-100" : "border-opacity-10 text-opacity-30"}`}
         >
           <PlusIcon size={16} />
           Novo

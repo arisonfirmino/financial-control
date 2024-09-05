@@ -1,5 +1,5 @@
 import { Bank, Expense } from "@prisma/client";
-import TransactionItem from "./transaction-item";
+import TransactionItem from "./transaction/transaction-item";
 import { deleteExpense } from "../actions/expense";
 
 interface ExpensesListProps {
@@ -8,7 +8,7 @@ interface ExpensesListProps {
 
 export default function ExpensesList({ expenses }: ExpensesListProps) {
   return (
-    <div className="w-full space-y-2.5">
+    <div className="min-w-full space-y-2.5">
       <h3 className="text-base font-semibold uppercase">Central de gastos</h3>
 
       {expenses.map((expense) => (
